@@ -2,9 +2,10 @@ Hello, welcome to AHA.
 
 This is an R Shiny application that tries to allow viewers new perspectives on CAMD data.
 
-All data is available through AMPD.
+All data is available through AMPD. You will need to find the right queries to get the data
 
 This app is for prototyping purposes only. 
+
 
 to launch the database for the app, go to the command line with the docker file, and type
 

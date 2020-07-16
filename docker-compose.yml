@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  #shiny-server:
+  #   build:
+  #     context: .
+  #     dockerfile: r-app.dockerfile
+  #   ports:
+  #     - "3838:3838"
+  #   depends_on: 
+  #    - db
+  db:
+    image: postgres
+    env_file:
+      - database.env
+    volumes:
+      - ./data:/data
+      - ./etc/db:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"

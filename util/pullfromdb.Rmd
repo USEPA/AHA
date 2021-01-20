@@ -1,0 +1,98 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+*Only works for EPA Users
+This generates the tables neccessary to start the database locally for development. You then need to save the CSV files in the same folder as the 'init-dev-db.sql'
+
+```{r}
+library(tidyverse)
+library(odbc)
+connect_to_db <- function(){
+  channel <-
+    dbConnect(
+      odbc::odbc(),
+      "CAMDASH",
+         username = rstudioapi::showPrompt(
+      title = "Username", message = "Username", default = ""
+    ),
+      PWD = rstudioapi::askForPassword()
+    )
+  channel
+}
+```
+```{r}
+channel <- connect_to_db()
+```
+```{r}
+program_year_dim <- channel %>% tbl('PROGRAM_YEAR_DIM', schema = 'CAMDDMW')%>% collect()
+```
+
+```{r}
+account_fact <- channel %>% tbl('ACCOUNT_FACT', schema ='CAMDDMW')%>% collect()
+```
+```{r}
+account_compliance_dim <- channel %>% tbl('ACCOUNT_COMPLIANCE_DIM', schema='CAMDDMW') %>% collect()
+```
+```{r}
+transaction_fact <- channel %>% tbl('TRANSACTION_FACT', schema='CAMDDMW')%>% collect()
+```
+```{r}
+transaction_block_dim <- channel %>% tbl('TRANSACTION_BLOCK_DIM', schema='CAMDDMW')%>%collect()
+```
+```{r}
+program_year_dim <- channel %>% tbl('PROGRAM_YEAR_DIM', schema='CAMDDMW')%>% collect()
+```
+```{r}
+facility_ss <- channel %>% tbl('FACILITY_SS', schema='CAMDSNAP') %>% collect()
+```
+```{r}
+annual_unit_data <- channel %>%tbl("ANNUAL_UNIT_DATA", schema = "CAMDDMWEM") %>% collect()
+```
+```{r}
+ ozone_unit_data <- channel %>% tbl("OZONE_UNIT_DATA", schema = "CAMDDMWEM") %>% collect()
+```
+```{r}
+unit_fact <- channel %>%  tbl("UNIT_FACT", schema = "CAMDDMW") %>% collect()
+
+```
+```{r}
+
+op_status_year_dim <- channel %>% tbl("OP_STATUS_YEAR_DIM", schema = "CAMDDMW")%>% collect()
+
+```
+
+```{r}
+write.csv(annual_unit_data, "annual_unit_data.csv", row.names=FALSE, na='')
+write.csv(ozone_unit_data, "ozone_unit_data.csv", row.names=FALSE, na='')
+```
+```{r}
+
+write.csv(unit_fact, "unit_fact.csv", row.names=FALSE, na='')
+```
+
+```{r}
+write.csv(facility_ss, "facility_ss.csv", row.names=FALSE, na='')
+```
+```{r}
+write.csv(op_status_year_dim, "op_status_year_dim.csv", row.names=FALSE, na='')
+
+```
+
+```{r}
+write.csv(account_compliance_dim, "account_compliance_dim.csv",  row.names = FALSE, na='')
+write.csv(transaction_fact, "transaction_fact.csv",  row.names = FALSE, na='')
+write.csv(transaction_block_dim, "transaction_block_dim.csv", row.names=FALSE,na='')
+write.csv(program_year_dim, 'program_year_dim.csv', row.names = FALSE,na='')
+
+```
+```{r}
+require(dplyr)
+fixed_transactions = mutate_if(transaction_fact, is.numeric, as.integer)
+write.csv(fixed_transactions, "transaction_fact.csv",  row.names = FALSE, na='')
+```
+```{r}
+write.csv(account_fact, "account_fact.csv",  row.names = FALSE, na='')
+```
+
+

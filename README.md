@@ -41,6 +41,8 @@ CAMD users can create the CSV files that the app runs off of by using the utilit
 
 Non-CAMD users can use the tables from AMPD to get the right files to allow for the SQL script to generate the database.
 
+**note:** you must have docker desktop installed to create and run the dev database as it is currently set up
+
 to launch the database for the app, go to the command line with the docker file, and type
 
 `docker-compose up`
